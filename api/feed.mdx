@@ -58,6 +58,19 @@ curl -G https://xera.app/api/app/discover/users \
   --data-urlencode "offset=0"
 ```
 
+```python Python
+import requests
+
+response = requests.get(
+    "https://xera.app/api/app/discover/users",
+    headers={"Authorization": "Bearer <session_token>"},
+    params={"limit": 20, "offset": 0},
+)
+
+result = response.json()
+print(result["data"]["users"])
+```
+
 </CodeGroup>
 
 ## Response Structure

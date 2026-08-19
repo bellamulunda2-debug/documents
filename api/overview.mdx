@@ -4,7 +4,7 @@ sidebarTitle: "Overview"
 description: "Explore the Xera REST API — base URL, JSON response format, HTTP status codes, error handling patterns, and a guide to available endpoint groups."
 ---
 
-The Xera API is a REST API that powers the platform's core interactions. You can use it to track user engagement, retrieve algorithmically ranked feed data, update content metrics, and manage every aspect of creator monetization — from wallet overviews to Mobile Money withdrawals. All requests go to a single base URL, all responses are JSON, and all protected endpoints require a valid Supabase session token.
+The Xera API is a REST API that powers the platform's core interactions. You can use it to track user engagement, retrieve algorithmically ranked feed data, update content metrics, and manage every aspect of creator monetization — from wallet overviews to Mobile Money withdrawals. All requests go to a single base URL, all responses are JSON, and all protected endpoints require a valid session token.
 
 ## Base URL
 
@@ -17,7 +17,7 @@ https://xera.app
 Prefix all endpoint paths with this URL. For example, the discovery feed endpoint is reached at `https://xera.app/api/app/discover/users`.
 
 <Note>
-  There is no versioning segment in the path. The current generation of endpoints lives under `/api/app/*` (authenticated platform endpoints) and `/api/kpay/*` (payment flow endpoints).
+  There is no versioning segment in the path. Authenticated platform endpoints live under `/api/app/*`. Creator revenue and monetization endpoints live under `/api/creator-revenue/*` and `/api/monetization/*`.
 </Note>
 
 ## Response Format

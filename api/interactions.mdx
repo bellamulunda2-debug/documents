@@ -169,8 +169,8 @@ print(response.json())
 <Info>
   Every successful call to this endpoint automatically triggers two background updates:
 
-  1. **Retention metrics** — the target creator's `user_retention_metrics` record is recalculated to reflect the latest return-visitor rate and total session count.
-  2. **Affinity score** — the affinity score between the viewing user and the target creator is updated in `user_affinity`, which influences how often that creator appears in the viewer's discovery feed.
+  1. **Retention metrics** — the target creator's retention data is recalculated to reflect the latest return-visitor rate and total session count.
+  2. **Affinity score** — the affinity score between the viewing user and the target creator is updated, which influences how often that creator appears in the viewer's discovery feed.
 
   You do not need to call any additional endpoint to trigger these updates.
 </Info>

@@ -1,5 +1,5 @@
 ---
-title: "Notifications: Stay Updated on Your Xera Activity"
+title: "Notifications: Track Likes, Tips, and Streams on Xera"
 sidebarTitle: "Notifications"
 description: "Understand what triggers Xera notifications, how to access and manage them, and how to enable browser push alerts for real-time updates."
 ---
@@ -75,7 +75,7 @@ Push notifications let Xera alert you even when the browser tab is closed or the
 
 ### How Push Delivery Works
 
-Xera uses the **Web Push API** with a VAPID key pair to send push messages via your browser's push service. When a qualifying event occurs (new message, new live stream, incoming tip), the Xera server sends a push payload to all registered devices for your account. Your device's service worker intercepts the payload and displays the notification, including a title, body, and an icon — even if the app tab is closed.
+Xera uses the **Web Push API** to send push messages via your browser's built-in push service. When a qualifying event occurs — a new message, a live stream from a builder you follow, or an incoming tip — Xera sends a notification to all registered devices on your account. Your browser displays the notification including a title, summary, and icon, even if the Xera tab is closed.
 
 Clicking a push notification opens Xera directly to the relevant content.
 
