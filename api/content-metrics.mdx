@@ -1,52 +1,52 @@
 ---
-title: "POST /api/app/content-metrics/update — Update Metrics"
-sidebarTitle: "Content Metrics"
-description: "Report engagement duration and completion rate for any content item on Xera so the recommendation engine can surface high-quality content to more builders."
+title: "POST /api/app/content-metrics/update — Mise à jour des métriques"
+sidebarTitle: "Métriques de contenu"
+description: "Signalez la durée d'engagement et le taux de complétion pour tout élément de contenu sur Xera afin que le moteur de recommandation puisse mettre en avant le contenu de qualité vers plus de builders."
 ---
 
-Use this endpoint to report how users engage with specific content on Xera. Completion rate and watch or read duration are two of the strongest quality signals available to the recommendation engine — the more accurately you report them, the better Xera can surface the right content to the right audience. Call this endpoint when a user finishes a video, closes a trace mid-read, or pauses a live stream replay.
+Utilisez cet endpoint pour signaler comment les utilisateurs s'engagent avec du contenu spécifique sur Xera. Le taux de complétion et la durée de visionnage ou de lecture sont deux des signaux de qualité les plus forts disponibles pour le moteur de recommandation : plus vous les signalez avec précision, mieux Xera peut mettre en avant le bon contenu vers le bon public. Appelez cet endpoint lorsqu'un utilisateur termine une vidéo, ferme un Trace en cours de lecture ou met une rediffusion de diffusion en direct en pause.
 
 ## Endpoint
 
-```
-POST https://xera.app/api/app/content-metrics/update
+```text
+POST https://xera1.xyz/api/app/content-metrics/update
 ```
 
-## Authentication
+## Authentification
 
 <Note>
-  This endpoint requires a valid session token passed as a Bearer token in the `Authorization` header.
+  Cet endpoint nécessite un jeton de session valide passé en tant que jeton Bearer dans l'en-tête `Authorization`.
 </Note>
 
-```
+```text
 Authorization: Bearer <session_token>
 ```
 
-## Request Body
+## Corps de la requête
 
 <ParamField body="content_id" type="string (UUID)" required>
-  The UUID of the content item whose metrics you are updating.
+  L'UUID de l'élément de contenu dont vous mettez à jour les métriques.
 </ParamField>
 
 <ParamField body="content_type" type="string" required>
-  The type of content being reported (e.g., `video`, `stream`, `trace`).
+  Le type de contenu signalé (par exemple, `video`, `stream`, `trace`).
 </ParamField>
 
 <ParamField body="completion_rate" type="number">
-  A decimal between `0.0` and `1.0` representing how much of the content the user consumed. `0.0` means nothing was watched or read; `1.0` means the user reached the end.
+  Une décimale entre `0.0` et `1.0` représentant la quantité de contenu consommée par l'utilisateur. `0.0` signifie que rien n'a été regardé ou lu ; `1.0` signifie que l'utilisateur est arrivé à la fin.
 </ParamField>
 
 <ParamField body="engagement_duration" type="number">
-  The total number of seconds the user spent on this content item during the current session.
+  Le nombre total de secondes que l'utilisateur a passé sur cet élément de contenu pendant la session en cours.
 </ParamField>
 
-## Example Request
+## Exemple de requête
 
 <CodeGroup>
 
 ```javascript JavaScript
 const response = await fetch(
-  "https://xera.app/api/app/content-metrics/update",
+  "https://xera1.xyz/api/app/content-metrics/update",
   {
     method: "POST",
     headers: {
@@ -67,7 +67,7 @@ console.log(result);
 ```
 
 ```bash cURL
-curl -X POST https://xera.app/api/app/content-metrics/update \
+curl -X POST https://xera1.xyz/api/app/content-metrics/update \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <session_token>" \
   -d '{
@@ -80,49 +80,49 @@ curl -X POST https://xera.app/api/app/content-metrics/update \
 
 </CodeGroup>
 
-## Success Response
+## Réponse de succès
 
-**Status: `200 OK`**
+**Statut : `200 OK`**
 
 <ResponseField name="success" type="boolean">
-  `true` when the metrics were saved or updated successfully.
+  `true` lorsque les métriques ont été sauvegardées ou mises à jour avec succès.
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  The updated content metrics record for the current user and content item.
+  L'enregistrement de métriques de contenu mis à jour pour l'utilisateur actuel et l'élément de contenu.
 
-  <Expandable title="data fields">
+  <Expandable title="champs data">
     <ResponseField name="id" type="string (UUID)">
-      The unique identifier of the metrics record.
+      L'identifiant unique de l'enregistrement de métriques.
     </ResponseField>
 
     <ResponseField name="content_id" type="string (UUID)">
-      The UUID of the content item this record belongs to.
+      L'UUID de l'élément de contenu auquel cet enregistrement appartient.
     </ResponseField>
 
     <ResponseField name="content_type" type="string">
-      The type of content (e.g., `video`, `stream`, `trace`).
+      Le type de contenu (par exemple, `video`, `stream`, `trace`).
     </ResponseField>
 
     <ResponseField name="completion_rate" type="number">
-      The latest completion rate stored for this user and content item.
+      Le dernier taux de complétion stocké pour cet utilisateur et cet élément de contenu.
     </ResponseField>
 
     <ResponseField name="avg_watch_time" type="number">
-      The latest engagement duration (in seconds) stored for this session.
+      La dernière durée d'engagement (en secondes) stockée pour cette session.
     </ResponseField>
 
     <ResponseField name="engagement_score" type="number">
-      A computed score derived from `completion_rate` and `engagement_duration`. Used internally by the recommendation engine.
+      Un score calculé dérivé de `completion_rate` et `engagement_duration`. Utilisé en interne par le moteur de recommandation.
     </ResponseField>
 
     <ResponseField name="view_count" type="number">
-      The total number of times this endpoint has been called for this content item by the current user on the current day.
+      Le nombre total de fois où cet endpoint a été appelé pour cet élément de contenu par l'utilisateur actuel au cours de la journée en cours.
     </ResponseField>
   </Expandable>
 </ResponseField>
 
-```json Example Response
+```json Exemple de réponse
 {
   "success": true,
   "data": {
@@ -139,14 +139,14 @@ curl -X POST https://xera.app/api/app/content-metrics/update \
 }
 ```
 
-## Common Use Cases
+## Cas d'usage courants
 
 <Tabs>
-  <Tab title="Video completed">
-    When a user watches a video all the way through, send `completion_rate: 1.0` along with the actual runtime in seconds.
+  <Tab title="Vidéo terminée">
+    Lorsqu'un utilisateur regarde une vidéo jusqu'au bout, envoyez `completion_rate: 1.0` avec la durée réelle en secondes.
 
     ```javascript
-    await fetch("https://xera.app/api/app/content-metrics/update", {
+    await fetch("https://xera1.xyz/api/app/content-metrics/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -156,16 +156,16 @@ curl -X POST https://xera.app/api/app/content-metrics/update \
         content_id: "VIDEO_UUID",
         content_type: "video",
         completion_rate: 1.0,
-        engagement_duration: 180, // 3-minute video
+        engagement_duration: 180, // vidéo de 3 minutes
       }),
     });
     ```
   </Tab>
-  <Tab title="Trace closed mid-read">
-    When a user closes a Trace after reading for 45 seconds, omit `completion_rate` and send `engagement_duration` only.
+  <Tab title="Trace fermé en cours de lecture">
+    Lorsqu'un utilisateur ferme un Trace après 45 secondes de lecture, omettez `completion_rate` et envoyez uniquement `engagement_duration`.
 
     ```javascript
-    await fetch("https://xera.app/api/app/content-metrics/update", {
+    await fetch("https://xera1.xyz/api/app/content-metrics/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -179,11 +179,11 @@ curl -X POST https://xera.app/api/app/content-metrics/update \
     });
     ```
   </Tab>
-  <Tab title="Partial video view">
-    When a user drops off halfway through a video, send the fraction watched as `completion_rate`.
+  <Tab title="Visionnage partiel de vidéo">
+    Lorsqu'un utilisateur abandonne à mi-parcours d'une vidéo, envoyez la fraction regardée comme `completion_rate`.
 
     ```javascript
-    await fetch("https://xera.app/api/app/content-metrics/update", {
+    await fetch("https://xera1.xyz/api/app/content-metrics/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -200,23 +200,23 @@ curl -X POST https://xera.app/api/app/content-metrics/update \
   </Tab>
 </Tabs>
 
-## How the Engagement Score is Calculated
+## Comment le score d'engagement est calculé
 
-The server computes `engagement_score` from your reported values using this formula:
+Le serveur calcule `engagement_score` à partir de vos valeurs signalées en utilisant cette formule :
 
-```
+```text
 engagement_score = (completion_rate × 0.6) + (min(engagement_duration / 300, 1) × 40)
 ```
 
-A 5-minute (300-second) session with full completion yields the maximum score. Shorter or partial sessions produce proportionally lower scores.
+Une session de 5 minutes (300 secondes) avec complétion totale produit le score maximum. Des sessions plus courtes ou partielles produisent des scores proportionnellement plus faibles.
 
 <Note>
-  High completion rates directly boost a content item's **freshness** and **creator quality** signals in the recommendation engine. Content that users consistently finish rises in the discovery feed — rewarding creators who produce engaging ARCs, Traces, and videos.
+  Des taux de complétion élevés boostent directement les signaux de **fraîcheur** et de **qualité créateur** dans le moteur de recommandation. Le contenu que les utilisateurs terminent régulièrement remonte dans le fil de découverte : une récompense pour les créateurs qui produisent des ARCs, des Traces et des vidéos engageants.
 </Note>
 
-## Error Responses
+## Réponses d'erreur
 
-| Status | Error message | Cause |
-|--------|--------------|-------|
-| `400`  | `"content_id et content_type requis"` | `content_id` or `content_type` was omitted from the request body. |
-| `401`  | `"Non authentifié"` | The `Authorization` header is missing, expired, or invalid. |
+| Statut | Message d'erreur | Cause |
+| --- | --- | --- |
+| `400` | `"content_id et content_type requis"` | `content_id` ou `content_type` a été omis du corps de la requête. |
+| `401` | `"Non authentifié"` | L'en-tête `Authorization` est manquant, expiré ou invalide. |

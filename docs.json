@@ -35,7 +35,7 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Bien démarrer",
             "pages": [
               "introduction",
               "quickstart",
@@ -43,7 +43,7 @@
             ]
           },
           {
-            "group": "Core Concepts",
+            "group": "Concepts clés",
             "pages": [
               "concepts/arcs",
               "concepts/traces",
@@ -51,17 +51,17 @@
             ]
           },
           {
-            "group": "Features",
+            "group": "Fonctionnalités",
             "pages": [
               "features/feed",
+              "features/search",
               "features/live-streaming",
               "features/messaging",
-              "features/notifications",
-              "features/search"
+              "features/notifications"
             ]
           },
           {
-            "group": "Monetization",
+            "group": "Monétisation",
             "pages": [
               "monetization/overview",
               "monetization/subscription-plans",
@@ -70,14 +70,14 @@
             ]
           },
           {
-            "group": "For Recruiters",
+            "group": "Recruteurs",
             "pages": [
               "recruiters/elite-access",
               "recruiters/talent-search"
             ]
           },
           {
-            "group": "Help",
+            "group": "Aide",
             "pages": [
               "help/faq",
               "help/troubleshooting"
@@ -86,10 +86,10 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Référence API",
         "groups": [
           {
-            "group": "Overview",
+            "group": "Introduction",
             "pages": [
               "api/overview",
               "api/authentication"

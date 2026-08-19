@@ -1,57 +1,58 @@
 ---
-title: "Authenticating All Your Requests to the Xera REST API"
-sidebarTitle: "Authentication"
-description: "Learn how to authenticate Xera API requests using your session Bearer token — retrieve it after signing in and include it on every protected request."
+title: "Authentifier toutes vos requêtes à l'API REST Xera"
+sidebarTitle: "Authentification"
+description: "Apprenez à authentifier les requêtes API Xera avec votre jeton Bearer de session : récupérez-le après connexion et incluez-le dans chaque requête protégée."
 ---
 
-All Xera API endpoints that access user-specific data require authentication. When you sign in to Xera, the platform issues a short-lived **access token** (a JWT). Include that token in the `Authorization` header of every request to a protected endpoint. Unauthenticated requests return a `401 Unauthorized` response immediately.
+Tous les endpoints de l'API Xera qui accèdent à des données spécifiques à l'utilisateur nécessitent une authentification. Lorsque vous vous connectez à Xera, la plateforme émet un **jeton d'accès** à courte durée de vie (un JWT). Incluez ce jeton dans l'en-tête `Authorization` de chaque requête vers un endpoint protégé. Les requêtes non authentifiées retournent immédiatement une réponse `401 Unauthorized`.
 
-## How Authentication Works
+## Comment fonctionne l'authentification
 
-After a successful sign-in, Xera provides a session that contains an **access token**. Every subsequent API call must carry this token so the server can verify your identity and scope the response to your account. The token is tied to your Xera session — it grants access only to data belonging to that session.
+Après une connexion réussie, Xera fournit une session qui contient un **jeton d'accès**. Chaque appel API ultérieur doit transporter ce jeton afin que le serveur puisse vérifier votre identité et limiter la réponse à votre compte. Le jeton est lié à votre session Xera : il n'accorde l'accès qu'aux données appartenant à cette session.
 
+```text
+Authorization: Bearer <votre-jeton-d-acces>
 ```
-Authorization: Bearer <your-access-token>
-```
 
-The server validates the token on each request. If the token is valid, the request proceeds. If the token is expired, missing, or malformed, the API returns `401`.
+Le serveur valide le jeton à chaque requête. Si le jeton est valide, la requête est traitée. Si le jeton est expiré, manquant ou malformé, l'API retourne `401`.
 
-## Get Your Access Token
+## Obtenir votre jeton d'accès
 
-You can retrieve your access token in two ways — from browser DevTools (useful for testing) or programmatically via the Xera client session (recommended for integrations).
+Vous pouvez récupérer votre jeton d'accès de deux manières : depuis les outils de développement du navigateur (utile pour les tests) ou de manière programmatique via la session client Xera (recommandé pour les intégrations).
 
 <Steps>
-  <Step title="Sign in to Xera">
-    Open [xera.app](https://xera.app) in your browser and sign in with your account credentials.
+  <Step title="Connectez-vous à Xera">
+    Ouvrez [xera1.xyz](https://xera1.xyz) dans votre navigateur et connectez-vous avec vos identifiants.
   </Step>
-  <Step title="Open DevTools and find your session token">
-    Open your browser's DevTools (`F12` or `Cmd+Option+I`), navigate to the **Application** tab, and look in **Local Storage** under `https://xera.app` for the entry that contains `auth-token`. The `access_token` field inside that entry is your bearer token.
+  <Step title="Ouvrez les outils de développement et trouvez votre jeton de session">
+    Ouvrez les outils de développement de votre navigateur (`F12` ou `Cmd+Option+I`), naviguez vers l'onglet **Application** et cherchez dans le **Stockage local** sous `https://xera1.xyz` l'entrée qui contient `auth-token`. Le champ `access_token` à l'intérieur de cette entrée est votre jeton Bearer.
 
     <Tip>
-      If you don't find it in Local Storage, check the **Cookies** section of the same panel — the token may be stored there depending on your browser configuration.
+      Si vous ne le trouvez pas dans le Stockage local, vérifiez la section **Cookies** du même panneau : le jeton peut y être stocké selon la configuration de votre navigateur.
     </Tip>
   </Step>
-  <Step title="Or retrieve it programmatically from the session">
-    If you're building an integration that runs in an authenticated context alongside the Xera app, retrieve the session programmatically:
+  <Step title="Ou récupérez-le de manière programmatique depuis la session">
+    Si vous construisez une intégration qui s'exécute dans un contexte authentifié aux côtés de l'application Xera, récupérez la session de manière programmatique :
 
     ```javascript
     const { data: { session } } = await xera.auth.getSession();
     const accessToken = session?.access_token;
     ```
 
-    This approach always returns the current, non-expired token and is the recommended method for any code that runs on behalf of a logged-in user.
+    Cette approche retourne toujours le jeton actuel non expiré et est la méthode recommandée pour tout code s'exécutant au nom d'un utilisateur connecté.
   </Step>
 </Steps>
 
-## Use the Token in Requests
+## Utiliser le jeton dans les requêtes
 
-Pass the token in the `Authorization` header with the `Bearer` scheme on every request to a protected endpoint.
+Passez le jeton dans l'en-tête `Authorization` avec le schéma `Bearer` à chaque requête vers un endpoint protégé.
 
 <CodeGroup>
+
 ```javascript JavaScript (fetch)
 const { data: { session } } = await xera.auth.getSession();
 
-const response = await fetch('https://xera.app/api/app/discover/users', {
+const response = await fetch('https://xera1.xyz/api/app/discover/users', {
   headers: {
     'Authorization': `Bearer ${session.access_token}`,
     'Content-Type': 'application/json'
@@ -62,8 +63,8 @@ const data = await response.json();
 ```
 
 ```bash cURL
-curl -X GET https://xera.app/api/app/discover/users \
-  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+curl -X GET https://xera1.xyz/api/app/discover/users \
+  -H 'Authorization: Bearer VOTRE_JETON_D_ACCES' \
   -H 'Content-Type: application/json'
 ```
 
@@ -71,72 +72,73 @@ curl -X GET https://xera.app/api/app/discover/users \
 import requests
 
 headers = {
-    'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+    'Authorization': 'Bearer VOTRE_JETON_D_ACCES',
     'Content-Type': 'application/json'
 }
 
 response = requests.get(
-    'https://xera.app/api/app/discover/users',
+    'https://xera1.xyz/api/app/discover/users',
     headers=headers
 )
 
 data = response.json()
 ```
+
 </CodeGroup>
 
-Replace `YOUR_ACCESS_TOKEN` with the actual token value from your session. For JavaScript integrations, always retrieve the token dynamically from the session rather than hardcoding it — tokens expire and must be refreshed.
+Remplacez `VOTRE_JETON_D_ACCES` par la valeur réelle du jeton de votre session. Pour les intégrations JavaScript, récupérez toujours le jeton dynamiquement depuis la session plutôt que de l'écrire en dur : les jetons expirent et doivent être rafraîchis.
 
-## Token Expiry and Refresh
+## Expiration du jeton et rafraîchissement
 
-Access tokens are short-lived (typically **one hour**). When a token expires, all API calls return `401 Unauthorized` until you refresh it.
+Les jetons d'accès sont à courte durée de vie (généralement **une heure**). Lorsqu'un jeton expire, tous les appels API retournent `401 Unauthorized` jusqu'à ce que vous le rafraîchissiez.
 
-**Refresh the token manually:**
+**Rafraîchir le jeton manuellement :**
 
 ```javascript
 const { data: { session }, error } = await xera.auth.refreshSession();
 
 if (error) {
-  // Session could not be refreshed — prompt the user to sign in again
-  console.error('Session refresh failed:', error.message);
+  // La session n'a pas pu être rafraîchie : invitez l'utilisateur à se reconnecter
+  console.error('Échec du rafraîchissement de la session :', error.message);
 } else {
   const newAccessToken = session.access_token;
-  // Use newAccessToken for subsequent API calls
+  // Utilisez newAccessToken pour les appels API ultérieurs
 }
 ```
 
-**Or listen for automatic token refresh** using auth state change events — your client will receive a new session whenever the token is silently refreshed:
+**Ou écoutez le rafraîchissement automatique du jeton** en utilisant les événements de changement d'état d'authentification : votre client recevra une nouvelle session chaque fois que le jeton est rafraîchi silencieusement :
 
 ```javascript
 xera.auth.onAuthStateChange((event, session) => {
   if (event === 'TOKEN_REFRESHED') {
-    // session.access_token is now the fresh token
+    // session.access_token est maintenant le nouveau jeton
     updateStoredToken(session.access_token);
   }
   if (event === 'SIGNED_OUT') {
-    // Clear stored token and redirect to login
+    // Effacez le jeton stocké et redirigez vers la connexion
     clearStoredToken();
   }
 });
 ```
 
 <Info>
-  Xera sessions include a long-lived **refresh token** alongside the short-lived access token. The client uses the refresh token automatically to obtain a new access token in the background, so users rarely need to sign in again unless their session has been explicitly revoked.
+  Les sessions Xera incluent un **jeton de rafraîchissement** à longue durée de vie aux côtés du jeton d'accès à courte durée de vie. Le client utilise automatiquement le jeton de rafraîchissement pour obtenir un nouveau jeton d'accès en arrière-plan, de sorte que les utilisateurs n'ont rarement besoin de se reconnecter à moins que leur session n'ait été explicitement révoquée.
 </Info>
 
-## Troubleshooting 401 Errors
+## Résoudre les erreurs 401
 
-A `401 Unauthorized` response means the server could not authenticate your request. The most common causes are:
+Une réponse `401 Unauthorized` signifie que le serveur n'a pas pu authentifier votre requête. Les causes les plus courantes sont :
 
-| Cause | Fix |
-|-------|-----|
-| Token expired | Refresh your session and retry with the new token |
-| Token missing from header | Ensure the `Authorization: Bearer <token>` header is present on every request |
-| Not signed in | The user must complete the Xera sign-in flow before making API calls |
-| Incorrect header format | The scheme must be exactly `Bearer ` (capital B, one space) followed by the token |
-| `credentials` mode missing | For browser `fetch` calls that rely on cookies, add `credentials: 'include'` to the options |
+| Cause | Solution |
+| --- | --- |
+| Jeton expiré | Rafraîchissez votre session et réessayez avec le nouveau jeton |
+| Jeton manquant dans l'en-tête | Assurez-vous que l'en-tête `Authorization: Bearer <jeton>` est présent dans chaque requête |
+| Non connecté | L'utilisateur doit compléter le flux de connexion Xera avant de faire des appels API |
+| Format d'en-tête incorrect | Le schéma doit être exactement `Bearer ` (B majuscule, un espace) suivi du jeton |
+| Mode `credentials` manquant | Pour les appels `fetch` du navigateur qui dépendent des cookies, ajoutez `credentials: 'include'` aux options |
 
-If you continue to see `401` errors after refreshing the token, the user's session may have been revoked. In that case, redirect them to the Xera sign-in page to start a fresh session.
+Si vous continuez à voir des erreurs `401` après avoir rafraîchi le jeton, la session de l'utilisateur a peut-être été révoquée. Dans ce cas, redirigez-le vers la page de connexion Xera pour démarrer une nouvelle session.
 
 <Warning>
-  Never expose your access token in client-side source code, public repositories, or any location visible to other users. Treat it like a password — store it only in memory or in a secure, non-public session store. If you believe your token has been compromised, sign out of Xera immediately to invalidate the session.
+  N'exposez jamais votre jeton d'accès dans du code source côté client, des dépôts publics ou tout emplacement visible par d'autres utilisateurs. Traitez-le comme un mot de passe : stockez-le uniquement en mémoire ou dans un stockage de session sécurisé et non public. Si vous pensez que votre jeton a été compromis, déconnectez-vous immédiatement de Xera pour invalider la session.
 </Warning>
