@@ -1,72 +1,111 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Xera",
+  "theme": "willow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
-  },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "primary": "#bd5be0",
+    "light": "#ffffff",
+    "dark": "#bd5be0"
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "https://media.brand.dev/581ab2c2-0474-413a-9b2e-6157f16850d0.png",
+    "dark": "https://media.brand.dev/581ab2c2-0474-413a-9b2e-6157f16850d0.png"
+  },
+  "favicon": "https://media.brand.dev/2cab1f27-1772-4c92-85c1-12110b2294c3.png",
+  "fonts": {
+    "heading": {
+      "family": "Outfit"
+    },
+    "body": {
+      "family": "Inter"
+    }
+  },
+  "appearance": {
+    "default": "dark"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/GIBRILmadak/XERA"
     }
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "account-setup"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/arcs",
+              "concepts/traces",
+              "concepts/trajectory"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/feed",
+              "features/live-streaming",
+              "features/messaging",
+              "features/notifications",
+              "features/search"
+            ]
+          },
+          {
+            "group": "Monetization",
+            "pages": [
+              "monetization/overview",
+              "monetization/subscription-plans",
+              "monetization/creator-dashboard",
+              "monetization/payouts"
+            ]
+          },
+          {
+            "group": "For Recruiters",
+            "pages": [
+              "recruiters/elite-access",
+              "recruiters/talent-search"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "help/faq",
+              "help/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/overview",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api/interactions",
+              "api/feed",
+              "api/content-metrics",
+              "api/monetization"
+            ]
+          }
+        ]
+      }
     ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
   }
 }

@@ -1,0 +1,92 @@
+---
+title: "Direct Messages and Conversations on Xera"
+sidebarTitle: "Messaging"
+description: "Send and receive direct messages with builders and collaborators on Xera — start conversations from any profile and pick up where you left off."
+---
+
+Xera's messaging system lets you connect directly with other builders on the platform. Whether you want to give feedback on someone's Trace, propose a collaboration on an ARC, or simply reach out to a builder whose Trajectory impressed you, direct messages give you a private, persistent channel to do it.
+
+## Accessing Your Messages
+
+Click the **Messages** icon in the main navigation bar to open your inbox. A badge on the icon shows the number of unread messages across all your conversations. The badge updates in real time — when a new message arrives, the count increases immediately without requiring a page refresh.
+
+<Note>
+  The Messages section is only accessible to logged-in users. If you are not signed in, clicking the Messages icon redirects you to the login page.
+</Note>
+
+## Starting a Conversation
+
+<Steps>
+  <Step title="Find the builder's profile">
+    Navigate to the profile of the builder you want to message. You can reach a profile from the discovery feed, search results, a Trace card, or a stream page.
+  </Step>
+  <Step title="Click Message">
+    On their profile page, tap or click the **Message** button. Xera automatically creates a conversation between you and that builder if one does not already exist.
+  </Step>
+  <Step title="Write your first message">
+    Type your message in the composer at the bottom of the chat panel. Press **Enter** to send, or **Shift + Enter** to add a new line. You can also attach an image or video using the **+** button next to the input field.
+  </Step>
+</Steps>
+
+## Conversation Features
+
+The messaging interface is split into two panels: a conversation list on the left and the active chat on the right.
+
+<CardGroup cols={2}>
+  <Card title="Conversation List" icon="list">
+    All your active threads appear here, sorted by most recent activity. Each thread shows the other person's name, a message snippet, and the timestamp of the last message.
+  </Card>
+  <Card title="Unread Indicators" icon="circle-dot">
+    Unread message counts appear as badges on individual threads. Opening a conversation marks all its messages as read automatically.
+  </Card>
+  <Card title="Media Attachments" icon="paperclip">
+    Attach images or videos to any message. A preview renders inline before you send, so you can confirm the file looks right.
+  </Card>
+  <Card title="Real-Time Delivery" icon="bolt">
+    Messages arrive in real time via Supabase's realtime channel. If your connection drops, Xera queues outgoing messages and retries delivery automatically when you reconnect.
+  </Card>
+</CardGroup>
+
+### Sending a Message
+
+Type up to **4,000 characters** per message. For most conversations, keep messages focused and actionable — builders appreciate direct, substantive communication over vague check-ins.
+
+```
+Enter          → Send message
+Shift + Enter  → New line (multi-paragraph messages)
++ button       → Attach an image or video
+```
+
+### Managing a Conversation
+
+Inside any conversation, the header provides quick access to additional actions:
+
+- **Delete** — hide the conversation from your list. It reappears automatically if the other person sends you a new message
+- **Block** — prevent future messages from that user. You can unblock them later from **Account Settings → Privacy**
+
+## Messaging Limits
+
+| Requirement | Detail |
+|---|---|
+| Account required | You must be signed in to send or receive messages |
+| Self-messaging | You cannot open a conversation with yourself |
+| Blocked users | Blocked users cannot message you; you cannot message users who have blocked you |
+| Attachment types | Images and videos only |
+
+## Use Cases
+
+<Accordion title="Collaborate on an ARC">
+  If you want to work with another builder on a shared goal, reach out via DM to align on scope and milestones before either of you commits publicly. A short message with your ARC idea and what role you envision for them is enough to start a real collaboration conversation.
+</Accordion>
+
+<Accordion title="Give feedback on a Trace">
+  Leave a public comment on a Trace for visible feedback. Use a direct message for more detailed or private input — for example, if you spotted a bug, have a specific suggestion, or want to share a resource without cluttering the public thread.
+</Accordion>
+
+<Accordion title="Discuss joining an ARC together">
+  Some builders post ARCs that could benefit from a contributor. If you see an ARC in a domain where you have relevant skills, message the builder to express genuine interest and explain what you could add.
+</Accordion>
+
+<Tip>
+  Message builders whose Trajectory genuinely impresses you. Xera's community values direct, authentic outreach. A message that references a specific Trace or milestone is far more likely to get a response than a generic "let's connect."
+</Tip>

@@ -1,0 +1,103 @@
+---
+title: "Discovery Feed: How Xera Surfaces the Best Builders"
+sidebarTitle: "Discovery Feed"
+description: "Learn how Xera's recommendation engine ranks and surfaces builders in your feed — and what you can do to boost your own visibility and reach."
+---
+
+The discovery feed is where Xera's recommendation engine surfaces builders worth following. Unlike platforms that sort purely by recency or raw virality, Xera scores every creator in real time and composes a personalized feed designed to show you people who are genuinely building — not just posting. Every scroll is an opportunity to discover someone mid-arc, mid-grind, mid-proof.
+
+## How the Feed Works
+
+Xera does not display posts in chronological order. Instead, the engine calculates a **composite score** for each creator and ranks them accordingly. That score is recomputed continuously as new interactions, traces, and engagement signals arrive.
+
+The feed is also split into two layers:
+
+- **65% verified builders** — creators with an active paid plan and a verified badge, who the algorithm treats as higher-signal sources
+- **35% organic discovery** — a broader pool of unverified and emerging creators to keep the feed fresh and give new builders room to surface
+
+<Info>
+  Verified builders receive preferential distribution in the feed. Upgrading to a Standard, Medium, or Pro plan earns you a verified badge and boosts your placement in this priority slot.
+</Info>
+
+## Composite Scoring Factors
+
+Every creator's feed position is determined by a weighted composite of five signals:
+
+| Signal | Weight | What It Measures |
+|---|---|---|
+| **Engagement** | 40% | Views, video completion rate, comments, and tips received |
+| **Creator Quality** | 30% | Follower count, verified badge, monetization status, plan tier, and activity level |
+| **Freshness** | 15% | How recently the creator posted a Trace — older content decays exponentially |
+| **Retention** | 10% | Return visitor rate, average watch time, and repeat viewer count |
+| **Virality** | 5% | Weekly view growth rate, engagement velocity (views/hour), and share count |
+
+The final score formula looks like this:
+
+```
+final_score =
+  (engagement_score × 0.40) +
+  (creator_quality  × 0.30) +
+  (freshness_score  × 0.15) +
+  (retention_score  × 0.10) +
+  (virality_score   × 0.05) +
+  momentum_bonus +
+  affinity_adjustment −
+  diversity_penalty
+```
+
+A small randomization factor (5%) is also applied to keep results diverse and prevent the same creators from dominating every feed indefinitely.
+
+## What "Creator Quality" Actually Means
+
+Creator Quality is Xera's measure of how established and active a builder is. The algorithm combines:
+
+- **Follower count** — a proxy for audience trust and reach
+- **Verified badge** — granted on any paid plan (Standard, Medium, or Pro)
+- **Monetization status** — whether the creator has enabled tips or video revenue
+- **Plan tier** — Pro creators receive the highest quality signal; Standard and Medium creators rank above free accounts
+- **Activity level** — consistent Trace logging signals an active builder, not a dormant profile
+
+Two creators with identical follower counts can have very different Creator Quality scores if one is posting Traces daily and the other has been silent for three weeks.
+
+## How to Improve Your Feed Ranking
+
+<Steps>
+  <Step title="Post Traces consistently">
+    Freshness accounts for 15% of your score and decays fast. Log a Trace daily or every other day to stay near the top of that signal.
+  </Step>
+  <Step title="Drive real engagement">
+    Likes, comments, watch time, and tips all feed the Engagement signal (40%). Share your Traces where your audience already is — in communities, on other platforms, or via direct message — to pull people back to Xera.
+  </Step>
+  <Step title="Get your verified badge">
+    Upgrade to any paid plan to receive a verified badge. This directly improves both your Creator Quality score and your placement in the priority 65% slice of the feed. Standard starts at $2.50/mo.
+  </Step>
+  <Step title="Build your follower base">
+    Follow other builders, engage with their Traces, and reply genuinely. Reciprocal community behavior compounds: more followers improve Creator Quality, which improves ranking, which brings more followers.
+  </Step>
+  <Step title="Keep your ARC milestones moving">
+    Active ARCs signal progression. Builders who consistently update milestones and log related Traces maintain higher activity scores than those who create ARCs and let them stall.
+  </Step>
+</Steps>
+
+## Interacting with the Feed
+
+When you see a builder in the feed, you can take several actions without leaving the current view:
+
+<CardGroup cols={2}>
+  <Card title="Like a Trace" icon="heart">
+    Tap the heart icon to register a like. This boosts the creator's Engagement score and signals quality to the algorithm.
+  </Card>
+  <Card title="Follow a Builder" icon="user-plus">
+    Follow directly from a feed card. Followed builders appear more reliably in your personalized feed going forward.
+  </Card>
+  <Card title="Share a Trace" icon="share">
+    Share a Trace link externally. External traffic counts as engagement velocity and contributes to the Virality signal.
+  </Card>
+  <Card title="Bookmark a Trace" icon="bookmark">
+    Save a Trace to revisit later. Bookmarks are private and stored in your profile.
+  </Card>
+</CardGroup>
+
+<Note>
+  Xera's algorithm is intentionally biased toward real builders, not viral noise. A creator with 200 engaged followers who posts daily will consistently outrank a dormant account with 10,000 followers. Consistency beats clout.
+</Note>

@@ -1,0 +1,125 @@
+---
+title: "Xera API Reference: Overview and Getting Started Guide"
+sidebarTitle: "Overview"
+description: "Explore the Xera REST API — base URL, JSON response format, HTTP status codes, error handling patterns, and a guide to available endpoint groups."
+---
+
+The Xera API is a REST API that powers the platform's core interactions. You can use it to track user engagement, retrieve algorithmically ranked feed data, update content metrics, and manage every aspect of creator monetization — from wallet overviews to Mobile Money withdrawals. All requests go to a single base URL, all responses are JSON, and all protected endpoints require a valid Supabase session token.
+
+## Base URL
+
+Every API request targets the following base URL in production:
+
+```
+https://xera.app
+```
+
+Prefix all endpoint paths with this URL. For example, the discovery feed endpoint is reached at `https://xera.app/api/app/discover/users`.
+
+<Note>
+  There is no versioning segment in the path. The current generation of endpoints lives under `/api/app/*` (authenticated platform endpoints) and `/api/kpay/*` (payment flow endpoints).
+</Note>
+
+## Response Format
+
+Every Xera API response is a JSON object. Successful responses include a `success: true` flag alongside a `data` payload:
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "a1b2c3d4-...",
+    "interaction_type": "like",
+    "created_at": "2025-01-15T10:30:00.000Z"
+  }
+}
+```
+
+Error responses always include an `error` string describing what went wrong. The `success` flag is either `false` or absent:
+
+```json
+{
+  "success": false,
+  "error": "Missing required field: target_user_id"
+}
+```
+
+Some endpoints return a flat error object without the `success` key:
+
+```json
+{
+  "error": "Missing required field: target_user_id"
+}
+```
+
+Your client code should check for the presence of an `error` field or a `success: false` value before processing the response body.
+
+## HTTP Status Codes
+
+Xera uses standard HTTP status codes to signal the outcome of each request.
+
+| Code | Meaning | When you'll see it |
+|------|---------|--------------------|
+| `200 OK` | Request succeeded | Successful GET or POST that returns data |
+| `201 Created` | Resource created | Successful resource insertion (some endpoints) |
+| `400 Bad Request` | Invalid or missing input | Required fields missing from the request body |
+| `401 Unauthorized` | Authentication failed | Token missing, expired, or invalid |
+| `403 Forbidden` | Insufficient permissions | Authenticated but not authorized for the resource |
+| `404 Not Found` | Resource does not exist | User, content, or record not found |
+| `500 Internal Server Error` | Server-side failure | Unexpected error; retry or contact support |
+
+## Common Error Patterns
+
+Missing required fields return a `400` with a descriptive message:
+
+```json
+{
+  "success": false,
+  "error": "interaction_type et target_user_id sont requis"
+}
+```
+
+An expired or missing token returns `401`:
+
+```json
+{
+  "success": false,
+  "error": "Utilisateur non authentifié."
+}
+```
+
+An unexpected server failure returns `500`:
+
+```json
+{
+  "success": false,
+  "error": "Erreur serveur"
+}
+```
+
+<Tip>
+  Xera returns error messages in either English or French depending on the endpoint. Your integration should handle both and display a user-friendly message rather than exposing raw API errors.
+</Tip>
+
+## Rate Limiting
+
+Xera endpoints are rate-limited to protect platform health and ensure fair access for all builders. If your integration sends too many requests in a short window, you may receive a `429 Too Many Requests` response. Implement exponential backoff and avoid polling endpoints on tight loops — use the data returned by each call to drive subsequent requests only when necessary.
+
+## Endpoint Groups
+
+The Xera API is organized into four logical groups. Each group covers a distinct area of platform functionality.
+
+<CardGroup cols={2}>
+  <Card title="Interactions" icon="hand-pointer" href="/api/interactions">
+    Track user interactions (views, likes, shares, comments, bookmarks, follows) and feed impressions. These signals power the XERA v2 composite ranking algorithm.
+  </Card>
+  <Card title="Discovery Feed" icon="compass" href="/api/feed">
+    Retrieve the ranked discovery feed using the composite algorithm — 65% verified builders, 35% organic discovery, scored by engagement, creator quality, freshness, retention, and virality.
+  </Card>
+  <Card title="Content Metrics" icon="chart-bar" href="/api/content-metrics">
+    Update per-content engagement metrics including completion rate, average watch time, and computed engagement score. Used to keep the ranking signals fresh.
+  </Card>
+  <Card title="Monetization" icon="wallet" href="/api/monetization">
+    Access creator earnings summaries, wallet overviews, payout settings, and withdrawal requests. Initiate subscription and support payments via the KPay gateway.
+  </Card>
+</CardGroup>

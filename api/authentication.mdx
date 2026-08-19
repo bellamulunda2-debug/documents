@@ -1,0 +1,142 @@
+---
+title: "Authenticating All Your Requests to the Xera REST API"
+sidebarTitle: "Authentication"
+description: "Learn how to authenticate Xera API requests using your Supabase session token — retrieve it from the browser or the Supabase client."
+---
+
+All Xera API endpoints that access user-specific data require authentication. Xera uses session-based authentication powered by Supabase — you obtain a bearer token by logging in through the Xera web app or programmatically via the Supabase client library, then include that token in the `Authorization` header of every request. Unauthenticated requests to protected endpoints return a `401 Unauthorized` error immediately.
+
+## How Authentication Works
+
+When you log in to Xera, Supabase creates a session and issues a short-lived **access token** (a JWT). Every subsequent API call must carry this token in the request header so the server can verify your identity and look up your user record. The token is tied to your Xera account — it grants access to data belonging to your session, not to other users.
+
+```
+Authorization: Bearer <your-access-token>
+```
+
+The server validates the token against Supabase on each request. If the token is valid, the request proceeds. If the token is expired, missing, or malformed, the API returns `401`.
+
+## Get Your Access Token
+
+You can retrieve your access token in two ways — from browser DevTools (useful for testing) or programmatically via the Supabase client (recommended for integrations).
+
+<Steps>
+  <Step title="Log in to Xera">
+    Open [xera.app](https://xera.app) in your browser and sign in with your account credentials.
+  </Step>
+  <Step title="Open DevTools and find your session cookie">
+    Open your browser's DevTools (`F12` or `Cmd+Option+I`), navigate to the **Application** tab, expand **Cookies** in the left panel, and select `https://xera.app`. Look for the cookie named `sb-access-token` — its value is your bearer token.
+
+    <Tip>
+      In some browsers the Supabase session is stored under a key like `sb-ssbuagqwjptyhavinkxg-auth-token` in **Local Storage** rather than Cookies. Check both locations if you don't find it immediately.
+    </Tip>
+  </Step>
+  <Step title="Or retrieve it via the Supabase client">
+    If you're building an integration that runs in the browser alongside the Xera app, use the Supabase JS client to retrieve the session programmatically:
+
+    ```javascript
+    const { data: { session } } = await supabase.auth.getSession();
+    const accessToken = session?.access_token;
+    ```
+
+    This is the recommended approach for any code that runs in a logged-in context — it always returns the current, non-expired token.
+  </Step>
+</Steps>
+
+## Use the Token in Requests
+
+Pass the token in the `Authorization` header with the `Bearer` scheme on every request to a protected endpoint.
+
+<CodeGroup>
+```javascript JavaScript (fetch)
+const { data: { session } } = await supabase.auth.getSession();
+
+const response = await fetch('https://xera.app/api/app/discover/users', {
+  headers: {
+    'Authorization': `Bearer ${session.access_token}`,
+    'Content-Type': 'application/json'
+  }
+});
+
+const data = await response.json();
+```
+
+```bash cURL
+curl -X GET https://xera.app/api/app/discover/users \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+```python Python (requests)
+import requests
+
+headers = {
+    'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+    'Content-Type': 'application/json'
+}
+
+response = requests.get(
+    'https://xera.app/api/app/discover/users',
+    headers=headers
+)
+
+data = response.json()
+```
+</CodeGroup>
+
+Replace `YOUR_ACCESS_TOKEN` with the actual token value from your session. For JavaScript integrations, always retrieve the token dynamically from `supabase.auth.getSession()` rather than hardcoding it — tokens expire and must be refreshed.
+
+## Token Expiry and Refresh
+
+Supabase access tokens are short-lived (typically **one hour**). When a token expires, all API calls return `401 Unauthorized` until you refresh it.
+
+**Refresh the token automatically:**
+
+```javascript
+const { data: { session }, error } = await supabase.auth.refreshSession();
+
+if (error) {
+  // Session could not be refreshed — prompt the user to log in again
+  console.error('Session refresh failed:', error.message);
+} else {
+  const newAccessToken = session.access_token;
+  // Use newAccessToken for subsequent API calls
+}
+```
+
+**Or set up automatic token refresh** by listening to Supabase auth state changes — the client will emit a new session event whenever the token is refreshed:
+
+```javascript
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'TOKEN_REFRESHED') {
+    // session.access_token is now the fresh token
+    updateStoredToken(session.access_token);
+  }
+  if (event === 'SIGNED_OUT') {
+    // Clear stored token and redirect to login
+    clearStoredToken();
+  }
+});
+```
+
+<Info>
+  Supabase also issues a **refresh token** that lives much longer than the access token. The Supabase client uses this automatically to obtain a new access token without requiring the user to log in again, as long as the refresh token has not been revoked.
+</Info>
+
+## Troubleshooting 401 Errors
+
+A `401 Unauthorized` response means the server could not authenticate your request. The most common causes are:
+
+| Cause | Fix |
+|-------|-----|
+| Token expired | Call `supabase.auth.refreshSession()` and retry with the new token |
+| Token missing from header | Ensure the `Authorization: Bearer <token>` header is present on every request |
+| Not logged in | The user must complete the Xera login flow before making API calls |
+| Incorrect header format | The scheme must be exactly `Bearer ` (capital B, one space) followed by the token |
+| `credentials` mode missing | For browser `fetch` calls that rely on cookies, add `credentials: 'include'` to the options |
+
+If you continue to see `401` errors after refreshing the token, the user's session may have been revoked. In that case, redirect them to the Xera login page to start a fresh session.
+
+<Warning>
+  Never expose your access token in client-side source code, public repositories, or any location visible to other users. Treat it like a password — store it only in memory or in a secure, non-public session store. If you believe your token has been compromised, log out of Xera immediately to invalidate the session.
+</Warning>

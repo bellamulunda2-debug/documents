@@ -1,0 +1,159 @@
+---
+title: "Creator Dashboard: Track Your Xera Earnings & Stats"
+sidebarTitle: "Creator Dashboard"
+description: "Track earnings, wallet balances, video stats, and transactions in the Xera creator dashboard — your financial command center for managing monetization."
+---
+
+The creator dashboard is your financial command center on Xera. It brings together every number that matters to your earnings in one place: your live wallet balance, incoming tips, video revenue, and the full history of transactions with commission breakdowns. Access it at any time from your profile menu under **Monetization → Creator Dashboard**.
+
+## Wallet Overview
+
+The top of the dashboard shows four wallet cards that give you an instant snapshot of where your money stands.
+
+<CardGroup cols={2}>
+  <Card title="Available for Withdrawal" icon="circle-dollar-to-slot">
+    The amount you can request to withdraw **right now**. Only credited earnings that have not yet been withdrawn are shown here. The minimum withdrawal amount is **$5.00**.
+  </Card>
+  <Card title="Pending Earnings" icon="clock">
+    Revenue that has been earned but not yet released to your available balance. This includes tips and video payouts that are still being processed by the platform.
+  </Card>
+  <Card title="Pending / Processing Withdrawals" icon="arrows-rotate">
+    The total value of withdrawal requests you have submitted that are currently in **Pending** or **Processing** status. These funds are reserved and not available for a new withdrawal.
+  </Card>
+  <Card title="Total Paid Out" icon="money-bill-transfer">
+    The cumulative amount that has been successfully sent to your Mobile Money account across all completed withdrawals.
+  </Card>
+</CardGroup>
+
+<Note>
+  Only your **available balance** can be withdrawn. Pending earnings have not cleared yet and will not appear as withdrawable until they are released.
+</Note>
+
+## Revenue Overview
+
+The Revenue Overview section shows your total earnings broken down by source. Use the period filter buttons to narrow the view.
+
+**Filter options:** All · 30 days · 7 days · Today
+
+| Metric | Description |
+|---|---|
+| **Tips received** | Net total credited from all supporter tip transactions in the selected period |
+| **Video revenue** | Net RPM earnings from eligible video views in the selected period |
+| **Total** | Combined net amount credited across both revenue types |
+
+Each card also shows the transaction count or eligible view count for the selected period so you can correlate earnings with activity.
+
+## Video Statistics
+
+<Info>
+  The Video Statistics section is only visible on **Pro** plan accounts. Upgrade to Pro to unlock video monetization and this section of the dashboard.
+</Info>
+
+Pro creators see a dedicated stats grid that breaks down video performance in full detail.
+
+| Stat | What it measures |
+|---|---|
+| **Total views** | All views recorded across your video content |
+| **Eligible views (>60s)** | Views counted only on videos longer than 60 seconds — the only views that generate revenue |
+| **Monetized video count** | Number of your videos currently qualifying for RPM monetization |
+| **Estimated revenue** | Projected earnings calculated at $0.40 per 1,000 eligible views |
+
+<Warning>
+  Only videos **longer than 60 seconds** are eligible for revenue counting. Views on shorter videos are tracked in total views but are excluded from eligible views and do not contribute to your estimated earnings.
+</Warning>
+
+## Transactions Table
+
+The transactions table is a complete, paginated log of every credit event on your account. Each row shows the full financial breakdown of a single transaction.
+
+| Column | Description |
+|---|---|
+| **Date** | Timestamp of the transaction |
+| **Type** | `Tip` or `Video Revenue` |
+| **Gross amount** | The full amount before Xera's commission |
+| **Commission (20%)** | The platform fee deducted automatically |
+| **Net received** | The amount credited to your wallet after commission |
+| **Status** | Current state of the transaction (`Completed`, `Pending`, etc.) |
+
+**Filter by type:** All · Tips · Video Revenue
+
+Use the type filter to isolate tip income from video RPM credits when reviewing your earnings mix.
+
+## Monetization Status Card
+
+The status card at the top of the dashboard tells you whether monetization is currently **active** on your account or **locked**, and if locked, it explains exactly why.
+
+<Tabs>
+  <Tab title="Active">
+    Your account meets all requirements. Tips are enabled on your profile and (for Pro) video monetization is counting eligible views. No action required.
+  </Tab>
+  <Tab title="Locked — Plan Required">
+    Your current plan is Free or Standard. Upgrade to Medium or Pro to unlock monetization. The card includes a direct link to the Subscription Plans page.
+  </Tab>
+  <Tab title="Locked — Followers Required">
+    You are on Medium or Pro, but your follower count has not yet reached **1,000**. The card shows your current count and how many more followers you need. Monetization activates automatically once you cross the threshold.
+  </Tab>
+</Tabs>
+
+## API Reference
+
+The following endpoints power the creator dashboard. Use them if you are integrating with Xera's API or building on top of the platform.
+
+<AccordionGroup>
+  <Accordion title="GET /api/creator-revenue/:userId">
+    Returns the full revenue history and wallet summary for the specified user.
+
+    ```bash
+    GET /api/creator-revenue/:userId
+    Authorization: Bearer <session_token>
+    ```
+
+    **Path parameters:**
+
+    <ParamField path="userId" type="string" required>
+      The UUID of the creator whose revenue data you want to retrieve. Must match the authenticated session.
+    </ParamField>
+
+    **Response fields:**
+
+    <ResponseField name="available_balance" type="number">
+      Amount currently available for withdrawal in USD.
+    </ResponseField>
+    <ResponseField name="pending_incoming" type="number">
+      Earnings not yet released to the available balance.
+    </ResponseField>
+    <ResponseField name="pending_withdrawals" type="number">
+      Sum of withdrawal requests in Pending or Processing status.
+    </ResponseField>
+    <ResponseField name="paid_out_total" type="number">
+      Cumulative total of all completed withdrawals.
+    </ResponseField>
+    <ResponseField name="transactions" type="array">
+      Array of transaction objects with `date`, `type`, `gross`, `commission`, `net`, and `status` fields.
+    </ResponseField>
+  </Accordion>
+
+  <Accordion title="GET /api/monetization/overview">
+    Returns a combined summary of the creator's wallet, payout method settings, and recent transaction history.
+
+    ```bash
+    GET /api/monetization/overview
+    Authorization: Bearer <session_token>
+    ```
+
+    **Response fields:**
+
+    <ResponseField name="wallet" type="object">
+      Wallet object containing `available_balance`, `pending_incoming`, `pending_withdrawals`, and `paid_out_total`.
+    </ResponseField>
+    <ResponseField name="payout_method" type="object">
+      Saved Mobile Money account details (provider, account name, number, country code) or `null` if not configured.
+    </ResponseField>
+    <ResponseField name="recent_transactions" type="array">
+      Last 10 transactions across all revenue types.
+    </ResponseField>
+    <ResponseField name="monetization_active" type="boolean">
+      Whether the account currently has monetization enabled.
+    </ResponseField>
+  </Accordion>
+</AccordionGroup>

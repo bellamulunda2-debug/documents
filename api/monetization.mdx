@@ -1,0 +1,433 @@
+---
+title: "Monetization API: Revenue, Wallet, and Withdrawal Endpoints"
+sidebarTitle: "Monetization API"
+description: "Retrieve creator earnings, view wallet balances, configure Mobile Money payout accounts, and request withdrawals using the Xera monetization API."
+---
+
+The Xera monetization API lets you retrieve creator earnings, configure payout methods, and request withdrawals programmatically. All monetary values are denominated in USD. Xera retains a 20% platform commission on every transaction, and creators receive 80% net — the figures returned by these endpoints always reflect the creator's net share unless explicitly noted otherwise.
+
+<Note>
+  All endpoints on this page require authentication. Pass your session token as a Bearer token in every request:
+
+  ```
+  Authorization: Bearer <session_token>
+  ```
+</Note>
+
+---
+
+## GET /api/creator-revenue/:userId
+
+Retrieve a summary of all earnings for a specific creator. Use this to build revenue dashboards or to display lifetime stats on a creator's profile.
+
+```
+GET https://xera.app/api/creator-revenue/{userId}
+```
+
+**Path Parameters**
+
+<ParamField path="userId" type="string (UUID)" required>
+  The UUID of the creator whose revenue you want to retrieve.
+</ParamField>
+
+**Query Parameters**
+
+<ParamField query="period" type="string">
+  Filter results by time window. Accepted values: `today`, `7` (last 7 days), `30` (last 30 days), `all` (default).
+</ParamField>
+
+**Response Fields**
+
+<ResponseField name="success" type="boolean">
+  `true` when the data was fetched successfully.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Revenue summary for the specified creator and period.
+
+  <Expandable title="data fields">
+    <ResponseField name="totalGross" type="number">
+      The total gross revenue received before Xera's commission is deducted.
+    </ResponseField>
+
+    <ResponseField name="totalNet" type="number">
+      The total net revenue after Xera's 20% commission. This is the amount the creator actually earns.
+    </ResponseField>
+
+    <ResponseField name="totalCommission" type="number">
+      The total platform commission amount retained by Xera.
+    </ResponseField>
+
+    <ResponseField name="supportRevenue" type="number">
+      Net earnings from viewer tips ("Soutenir") received during the selected period.
+    </ResponseField>
+
+    <ResponseField name="videoRevenue" type="number">
+      Net earnings from video monetization ($0.40 per 1,000 qualifying views) during the selected period. Only videos longer than 60 seconds generate revenue.
+    </ResponseField>
+
+    <ResponseField name="transactionCount" type="number">
+      Total number of successful transactions in the selected period.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<CodeGroup>
+
+```javascript JavaScript
+const userId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
+
+const response = await fetch(
+  `https://xera.app/api/creator-revenue/${userId}?period=30`,
+  {
+    headers: {
+      "Authorization": "Bearer <session_token>",
+    },
+  }
+);
+
+const result = await response.json();
+console.log(result.data);
+```
+
+```bash cURL
+curl "https://xera.app/api/creator-revenue/a1b2c3d4-e5f6-7890-abcd-ef1234567890?period=30" \
+  -H "Authorization: Bearer <session_token>"
+```
+
+</CodeGroup>
+
+```json Example Response
+{
+  "success": true,
+  "data": {
+    "totalGross": 125.00,
+    "totalNet": 100.00,
+    "totalCommission": 25.00,
+    "supportRevenue": 64.00,
+    "videoRevenue": 36.00,
+    "transactionCount": 18
+  }
+}
+```
+
+---
+
+## GET /api/monetization/overview
+
+Retrieve a full wallet summary for the authenticated creator: balances, pending and completed withdrawals, payout method configuration, and recent transactions.
+
+```
+GET https://xera.app/api/monetization/overview
+```
+
+**Response Fields**
+
+<ResponseField name="success" type="boolean">
+  `true` when the wallet overview was loaded successfully.
+</ResponseField>
+
+<ResponseField name="wallet" type="object">
+  The creator's current wallet state.
+
+  <Expandable title="wallet fields">
+    <ResponseField name="available_balance" type="number">
+      The amount in USD available for withdrawal right now.
+    </ResponseField>
+
+    <ResponseField name="pending_incoming" type="number">
+      Revenue that has been earned but not yet settled into the available balance.
+    </ResponseField>
+
+    <ResponseField name="pending_withdrawals" type="number">
+      Total USD currently locked in withdrawal requests that are still being processed.
+    </ResponseField>
+
+    <ResponseField name="paid_withdrawals" type="number">
+      Total USD that has been successfully paid out in the past.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="payoutSettings" type="object">
+  The creator's saved Mobile Money payout account, if one has been configured.
+
+  <Expandable title="payoutSettings fields">
+    <ResponseField name="provider" type="string">
+      The Mobile Money provider (e.g., `airtel_money`, `orange_money`).
+    </ResponseField>
+
+    <ResponseField name="walletNumber" type="string">
+      The registered phone number for the Mobile Money account.
+    </ResponseField>
+
+    <ResponseField name="accountName" type="string">
+      The name of the Mobile Money account holder.
+    </ResponseField>
+
+    <ResponseField name="country" type="string">
+      The ISO country code for the payout account (e.g., `CD`).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="withdrawals" type="array">
+  Recent withdrawal requests with their current status.
+</ResponseField>
+
+<CodeGroup>
+
+```javascript JavaScript
+const response = await fetch("https://xera.app/api/monetization/overview", {
+  headers: {
+    "Authorization": "Bearer <session_token>",
+  },
+});
+
+const result = await response.json();
+console.log(result.wallet);
+```
+
+```bash cURL
+curl https://xera.app/api/monetization/overview \
+  -H "Authorization: Bearer <session_token>"
+```
+
+</CodeGroup>
+
+```json Example Response
+{
+  "success": true,
+  "wallet": {
+    "available_balance": 42.50,
+    "pending_incoming": 8.00,
+    "pending_withdrawals": 0.00,
+    "paid_withdrawals": 120.00
+  },
+  "payoutSettings": {
+    "provider": "orange_money",
+    "walletNumber": "+243812345678",
+    "accountName": "Amara Diallo",
+    "country": "CD"
+  },
+  "withdrawals": []
+}
+```
+
+---
+
+## POST /api/monetization/payout-settings
+
+Save or update your Mobile Money account so Xera knows where to send payouts. You must configure a payout account before you can submit a withdrawal request.
+
+```
+POST https://xera.app/api/monetization/payout-settings
+```
+
+**Request Body**
+
+<ParamField body="provider" type="string" required>
+  Your Mobile Money provider. Must be one of: `airtel_money`, `orange_money`, `mpesa`, `afrimoney`, `other`.
+</ParamField>
+
+<ParamField body="account_holder_name" type="string" required>
+  The full name registered on the Mobile Money account. Maximum 80 characters.
+</ParamField>
+
+<ParamField body="phone_number" type="string" required>
+  The Mobile Money account phone number in international format: `+CCXXXXXXXXXX` (country code followed by the local number, no spaces).
+</ParamField>
+
+<ParamField body="country_code" type="string">
+  ISO 3166-1 alpha-2 country code. Defaults to `CD` (Democratic Republic of Congo) if omitted.
+</ParamField>
+
+<ParamField body="note" type="string">
+  An optional note to attach to this payout account for your own reference. Maximum 280 characters.
+</ParamField>
+
+**Response Fields**
+
+<ResponseField name="success" type="boolean">
+  `true` when the payout settings were saved or updated successfully.
+</ResponseField>
+
+<ResponseField name="payoutSettings" type="object">
+  The saved payout settings record.
+</ResponseField>
+
+<CodeGroup>
+
+```javascript JavaScript
+const response = await fetch(
+  "https://xera.app/api/monetization/payout-settings",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer <session_token>",
+    },
+    body: JSON.stringify({
+      provider: "orange_money",
+      account_holder_name: "Amara Diallo",
+      phone_number: "+243812345678",
+      country_code: "CD",
+    }),
+  }
+);
+
+const result = await response.json();
+console.log(result.payoutSettings);
+```
+
+```bash cURL
+curl -X POST https://xera.app/api/monetization/payout-settings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <session_token>" \
+  -d '{
+    "provider": "orange_money",
+    "account_holder_name": "Amara Diallo",
+    "phone_number": "+243812345678",
+    "country_code": "CD"
+  }'
+```
+
+</CodeGroup>
+
+```json Example Response
+{
+  "success": true,
+  "payoutSettings": {
+    "id": "b9a8c7d6-e5f4-3210-abcd-ef0987654321",
+    "provider": "orange_money",
+    "accountName": "Amara Diallo",
+    "walletNumber": "+243812345678",
+    "country": "CD",
+    "status": "active"
+  }
+}
+```
+
+---
+
+## POST /api/monetization/withdrawals
+
+Submit a withdrawal request to transfer funds from your Xera wallet to your registered Mobile Money account. You must have a configured payout account and sufficient available balance before calling this endpoint.
+
+```
+POST https://xera.app/api/monetization/withdrawals
+```
+
+**Request Body**
+
+<ParamField body="amount" type="number" required>
+  The amount in USD you want to withdraw. Minimum value: `5.00`. The amount cannot exceed your current `available_balance`.
+</ParamField>
+
+**Response Fields**
+
+<ResponseField name="success" type="boolean">
+  `true` when the withdrawal request was created successfully.
+</ResponseField>
+
+<ResponseField name="withdrawal" type="object">
+  The newly created withdrawal request.
+
+  <Expandable title="withdrawal fields">
+    <ResponseField name="id" type="string (UUID)">
+      The unique identifier of the withdrawal request.
+    </ResponseField>
+
+    <ResponseField name="amount_usd" type="number">
+      The amount requested for withdrawal in USD.
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      Always `"pending"` immediately after creation. The status updates to `processing`, `paid`, or `rejected` as the request is reviewed.
+    </ResponseField>
+
+    <ResponseField name="provider" type="string">
+      The Mobile Money provider the funds will be sent to.
+    </ResponseField>
+
+    <ResponseField name="requested_at" type="string (ISO 8601)">
+      The timestamp when the withdrawal request was submitted.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<CodeGroup>
+
+```javascript JavaScript
+const response = await fetch("https://xera.app/api/monetization/withdrawals", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer <session_token>",
+  },
+  body: JSON.stringify({
+    amount: 25.00,
+  }),
+});
+
+const result = await response.json();
+console.log(result.withdrawal);
+```
+
+```bash cURL
+curl -X POST https://xera.app/api/monetization/withdrawals \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <session_token>" \
+  -d '{ "amount": 25.00 }'
+```
+
+</CodeGroup>
+
+```json Example Response
+{
+  "success": true,
+  "withdrawal": {
+    "id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+    "amount_usd": 25.00,
+    "status": "pending",
+    "provider": "orange_money",
+    "requested_at": "2025-01-15T14:22:00.000Z"
+  }
+}
+```
+
+**Error Responses**
+
+| Status | Error message | Cause |
+|--------|--------------|-------|
+| `400`  | `"Le retrait minimum est de 5 USD."` | The requested `amount` is below the $5.00 minimum. |
+| `400`  | `"Solde disponible insuffisant pour ce retrait."` | The requested amount exceeds your current `available_balance`. |
+| `400`  | `"Enregistrez d'abord votre compte Mobile Money."` | No payout account has been saved yet. Call `POST /api/monetization/payout-settings` first. |
+| `401`  | `"Non authentifié"` | The `Authorization` header is missing, expired, or invalid. |
+
+<Warning>
+  Withdrawal requests are processed **manually** by the Xera team. Processing typically takes **2–5 business days** after submission. You will receive a notification when your request moves to `processing` and again when it is marked `paid`. Do not submit duplicate requests for the same amount while one is still pending.
+</Warning>
+
+---
+
+## Notes
+
+<Note>
+  All amounts across the monetization API are in **USD**.
+</Note>
+
+<Accordion title="Commission and payout structure">
+  Xera retains **20%** of every transaction as a platform commission. Creators receive the remaining **80% net**. The breakdown applies to both direct tips (Soutenir) and video RPM revenue.
+
+  - **Video monetization rate:** $0.40 per 1,000 qualifying views (Pro plan only)
+  - **Qualifying views:** only counted for videos longer than 60 seconds
+  - **Minimum withdrawal:** $5.00
+  - **Payout methods:** Airtel Money, Orange Money, M-Pesa, Afrimoney, or Other Mobile Money
+</Accordion>
+
+<Accordion title="Subscription requirements for monetization">
+  - **Standard ($2.50/mo):** verified badge only — no monetization features
+  - **Medium ($6.00/mo):** verified badge + ability to receive tips; requires 1,000 followers
+  - **Pro ($10.00/mo):** all Medium features + video monetization and advanced dashboard; requires 1,000 followers
+</Accordion>

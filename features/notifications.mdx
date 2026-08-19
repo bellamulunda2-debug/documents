@@ -1,0 +1,93 @@
+---
+title: "Notifications: Stay Updated on Your Xera Activity"
+sidebarTitle: "Notifications"
+description: "Understand what triggers Xera notifications, how to access and manage them, and how to enable browser push alerts for real-time updates."
+---
+
+Xera notifications keep you informed when people engage with your work. Every like on a Trace, new follower, incoming tip, or live stream from a builder you follow generates a notification so you can respond in the moment — not hours later. Notifications are delivered both inside the app and, with your permission, directly to your device via push.
+
+## Notification Types
+
+Xera generates notifications for the following events:
+
+| Notification | When it fires |
+|---|---|
+| **New follower** | Someone starts following your profile |
+| **Trace liked** | A builder likes one of your Traces |
+| **Trace commented** | A builder leaves a comment on one of your Traces |
+| **New supporter (tip received)** | A viewer sends you a tip during a live stream or via your profile |
+| **New live stream** | A builder you follow starts a live stream |
+| **ARC milestone reached** | You complete a milestone inside one of your active ARCs |
+| **Subscription renewal reminder** | Your subscription plan is approaching its renewal date |
+
+<Info>
+  Live stream notifications are sent only to followers of the streamer, and only if the streamer is on an active paid plan (Standard, Medium, or Pro).
+</Info>
+
+## Accessing Notifications
+
+Click the **bell icon** in the navigation bar to open the notification panel. The bell displays a badge with your current unread count — the number updates in real time as new notifications arrive, so you always know when something needs your attention.
+
+The panel shows your 50 most recent notifications, sorted from newest to oldest. Each entry displays:
+
+- The notification type and a short message
+- The actor's avatar (the person who triggered the notification)
+- A relative timestamp (e.g., "5 min ago", "2h", "3 days ago")
+
+Clicking any notification opens the relevant content directly — a Trace, a stream, your ARC dashboard, or your subscription settings — and marks the notification as read.
+
+## Marking Notifications as Read
+
+<Tabs>
+  <Tab title="Mark individually">
+    Click any notification in the panel. It is automatically marked as read when you open it, and the unread badge count decreases accordingly.
+  </Tab>
+  <Tab title="Mark all as read">
+    Open the notification panel. All unread notifications are marked as read as soon as the panel opens — you do not need to click each one individually. The badge clears immediately.
+  </Tab>
+</Tabs>
+
+## Push Notifications
+
+Push notifications let Xera alert you even when the browser tab is closed or the app is in the background. Enabling push gives you real-time alerts for new messages, live streams from builders you follow, and incoming tips.
+
+### Enabling Push Notifications
+
+<Steps>
+  <Step title="Respond to the permission prompt">
+    When you first sign in, Xera displays a permission banner at the top of the screen: **"Activer les notifications"**. Click **Autoriser** (Allow) to grant push permission.
+  </Step>
+  <Step title="Confirm in your browser">
+    Your browser will show its own native permission dialog. Click **Allow** to confirm. This is a one-time step.
+  </Step>
+  <Step title="Receive push alerts">
+    Once granted, Xera registers your device via the Web Push API. You will receive notifications even when the app is not open.
+  </Step>
+</Steps>
+
+<Note>
+  If you dismissed the permission prompt or selected **"Plus tard"** (Later), Xera will not request permission again automatically. To enable push manually, go to your browser's site settings and grant notification permission for the Xera domain, then reload the page.
+</Note>
+
+<Warning>
+  If your browser shows **Denied** for notifications, Xera cannot override that setting. You must clear the block in your browser's site permissions and reload the page before the prompt will reappear.
+</Warning>
+
+### How Push Delivery Works
+
+Xera uses the **Web Push API** with a VAPID key pair to send push messages via your browser's push service. When a qualifying event occurs (new message, new live stream, incoming tip), the Xera server sends a push payload to all registered devices for your account. Your device's service worker intercepts the payload and displays the notification, including a title, body, and an icon — even if the app tab is closed.
+
+Clicking a push notification opens Xera directly to the relevant content.
+
+## Managing Notification Preferences
+
+To control which notification types you receive, navigate to **Account Settings → Notifications**. Each notification type can be toggled on or off independently.
+
+| Setting | Effect |
+|---|---|
+| Toggle **off** | You no longer receive that notification type inside the app or via push |
+| Toggle **on** | Notifications resume immediately for future events |
+
+<Tip>
+  If you find the live chat notification volume high during active streams, Xera automatically suppresses live chat notifications while you are actively viewing that stream — so you do not get alerted for every chat message while you are already watching.
+</Tip>
