@@ -1,14 +1,14 @@
 ---
-title: "Authentifier toutes vos requêtes à l'API REST Xera"
+title: "Authentifier toutes vos requêtes à l'API REST Xera1"
 sidebarTitle: "Authentification"
 description: "Apprenez à authentifier les requêtes API Xera avec votre jeton Bearer de session : récupérez-le après connexion et incluez-le dans chaque requête protégée."
 ---
 
-Tous les endpoints de l'API Xera qui accèdent à des données spécifiques à l'utilisateur nécessitent une authentification. Lorsque vous vous connectez à Xera, la plateforme émet un **jeton d'accès** à courte durée de vie (un JWT). Incluez ce jeton dans l'en-tête `Authorization` de chaque requête vers un endpoint protégé. Les requêtes non authentifiées retournent immédiatement une réponse `401 Unauthorized`.
+Tous les endpoints de l'API Xera1 qui accèdent à des données spécifiques à l'utilisateur nécessitent une authentification. Lorsque vous vous connectez à Xera1, la plateforme émet un **jeton d'accès** à courte durée de vie (un JWT). Incluez ce jeton dans l'en-tête `Authorization` de chaque requête vers un endpoint protégé. Les requêtes non authentifiées retournent immédiatement une réponse `401 Unauthorized`.
 
 ## Comment fonctionne l'authentification
 
-Après une connexion réussie, Xera fournit une session qui contient un **jeton d'accès**. Chaque appel API ultérieur doit transporter ce jeton afin que le serveur puisse vérifier votre identité et limiter la réponse à votre compte. Le jeton est lié à votre session Xera : il n'accorde l'accès qu'aux données appartenant à cette session.
+Après une connexion réussie, Xera1 fournit une session qui contient un **jeton d'accès**. Chaque appel API ultérieur doit transporter ce jeton afin que le serveur puisse vérifier votre identité et limiter la réponse à votre compte. Le jeton est lié à votre session Xera1 : il n'accorde l'accès qu'aux données appartenant à cette session.
 
 ```text
 Authorization: Bearer <votre-jeton-d-acces>
@@ -21,7 +21,7 @@ Le serveur valide le jeton à chaque requête. Si le jeton est valide, la requê
 Vous pouvez récupérer votre jeton d'accès de deux manières : depuis les outils de développement du navigateur (utile pour les tests) ou de manière programmatique via la session client Xera (recommandé pour les intégrations).
 
 <Steps>
-  <Step title="Connectez-vous à Xera">
+  <Step title="Connectez-vous à Xera1">
     Ouvrez [xera1.xyz](https://xera1.xyz) dans votre navigateur et connectez-vous avec vos identifiants.
   </Step>
   <Step title="Ouvrez les outils de développement et trouvez votre jeton de session">
