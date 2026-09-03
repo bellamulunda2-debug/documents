@@ -1,128 +1,110 @@
 ---
-title: "Référence API Xera : aperçu et guide de démarrage"
-sidebarTitle: "Aperçu"
-description: "Explorez l'API REST Xera : URL de base, format de réponse JSON, codes HTTP, patterns de gestion d'erreurs et guide des groupes de endpoints disponibles."
+title: "Vue d'ensemble de l'API Xera 1 : REST, authentification et limites de débit"
+sidebarTitle: "Vue d'ensemble"
+description: "L'API REST de Xera 1 vous permet d'accéder aux profils de builders, aux ARCs, aux Traces et aux métriques de Trajectory depuis vos propres outils et intégrations."
 ---
 
-L'API Xera est une API REST qui alimente les interactions principales de la plateforme. Vous pouvez l'utiliser pour suivre l'engagement des utilisateurs, récupérer les données du fil classé algorithmiquement, mettre à jour les métriques de contenu et gérer chaque aspect de la monétisation des créateurs : du résumé du portefeuille aux retraits Mobile Money. Toutes les requêtes sont envoyées à une seule URL de base, toutes les réponses sont en JSON et tous les endpoints protégés nécessitent un jeton de session valide.
+L'API REST de Xera 1 permet aux développeurs d'intégrer les données de la plateforme dans leurs propres outils, dashboards et workflows. Lisez les profils de builders, récupérez les Traces publiées, accédez aux métriques de Trajectory et publiez des Traces au nom de vos utilisateurs.
 
 ## URL de base
 
-Chaque requête API cible l'URL de base suivante en production :
-
 ```text
-https://xera1.xyz
+https://api.xera1.xyz/v1
 ```
 
-Préfixez tous les chemins d'endpoint avec cette URL. Par exemple, l'endpoint de fil de découverte est accessible à `https://xera1.xyz/api/app/discover/users`.
-
-<Note>
-  Il n'y a pas de segment de version dans le chemin. Les endpoints de la plateforme authentifiés se trouvent sous `/api/app/*`. Les endpoints de revenus créateurs et de monétisation se trouvent sous `/api/creator-revenue/*` et `/api/monetization/*`.
-</Note>
+Toutes les requêtes doivent être faites avec HTTPS. Les requêtes HTTP sont redirigées vers HTTPS.
 
 ## Format de réponse
 
-Chaque réponse de l'API Xera est un objet JSON. Les réponses réussies incluent un indicateur `success: true` accompagné d'une charge utile `data` :
+L'API retourne toujours du JSON. Chaque réponse inclut :
 
 ```json
 {
   "success": true,
-  "data": {
-    "id": "a1b2c3d4-...",
-    "interaction_type": "like",
-    "created_at": "2025-01-15T10:30:00.000Z"
+  "data": { ... },
+  "meta": {
+    "requestId": "req_abc123",
+    "timestamp": "2025-01-15T10:30:00Z"
   }
 }
 ```
 
-Les réponses d'erreur incluent toujours une chaîne `error` décrivant ce qui s'est mal passé. L'indicateur `success` est soit `false`, soit absent :
+En cas d'erreur :
 
 ```json
 {
   "success": false,
-  "error": "Missing required field: target_user_id"
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Token d'API invalide ou expiré"
+  }
 }
 ```
 
-Certains endpoints retournent un objet d'erreur plat sans la clé `success` :
+## Authentification
 
-```json
-{
-  "error": "Missing required field: target_user_id"
-}
+Toutes les requêtes à l'API nécessitent un token Bearer dans l'en-tête `Authorization`. Consultez la page [Authentification](/api/authentication) pour obtenir et gérer vos tokens.
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+  https://api.xera1.xyz/v1/me
 ```
 
-Votre code client doit vérifier la présence d'un champ `error` ou une valeur `success: false` avant de traiter le corps de la réponse.
+## Limites de débit
 
-## Codes HTTP
-
-Xera utilise les codes HTTP standards pour signaler le résultat de chaque requête.
-
-| Code | Signification | Quand vous le verrez |
+| Plan | Requêtes par minute | Requêtes par jour |
 | --- | --- | --- |
-| `200 OK` | Requête réussie | GET ou POST réussi qui retourne des données |
-| `201 Created` | Ressource créée | Insertion de ressource réussie (certains endpoints) |
-| `400 Bad Request` | Entrée invalide ou manquante | Champs requis manquants dans le corps de la requête |
-| `401 Unauthorized` | Échec d'authentification | Jeton manquant, expiré ou invalide |
-| `403 Forbidden` | Permissions insuffisantes | Authentifié mais non autorisé pour la ressource |
-| `404 Not Found` | La ressource n'existe pas | Utilisateur, contenu ou enregistrement non trouvé |
-| `500 Internal Server Error` | Échec côté serveur | Erreur inattendue : réessayez ou contactez le support |
+| Standard | 60 | 10 000 |
+| Elite | 300 | 100 000 |
 
-## Patterns d'erreur courants
+Quand vous dépassez la limite, l'API retourne HTTP `429 Too Many Requests` avec l'en-tête `Retry-After` indiquant le nombre de secondes à attendre.
 
-Les champs requis manquants retournent un `400` avec un message descriptif :
+## Pagination
+
+Les endpoints qui retournent des listes sont paginés avec des curseurs :
 
 ```json
 {
-  "success": false,
-  "error": "interaction_type et target_user_id sont requis"
+  "success": true,
+  "data": [...],
+  "pagination": {
+    "cursor": "cursor_xyz789",
+    "hasMore": true
+  }
 }
 ```
 
-Un jeton expiré ou manquant retourne `401` :
+Passez le curseur dans le paramètre `cursor` de votre prochaine requête pour récupérer la page suivante.
 
-```json
-{
-  "success": false,
-  "error": "Utilisateur non authentifié."
-}
-```
+## Codes de statut HTTP
 
-Un échec serveur inattendu retourne `500` :
+| Code | Signification |
+| --- | --- |
+| `200 OK` | Requête réussie |
+| `201 Created` | Ressource créée avec succès |
+| `400 Bad Request` | Paramètres manquants ou invalides |
+| `401 Unauthorized` | Token manquant ou invalide |
+| `403 Forbidden` | Accès refusé pour cette ressource |
+| `404 Not Found` | Ressource introuvable |
+| `429 Too Many Requests` | Limite de débit atteinte |
+| `500 Internal Server Error` | Erreur interne |
 
-```json
-{
-  "success": false,
-  "error": "Erreur serveur"
-}
-```
-
-<Tip>
-  Xera retourne les messages d'erreur en anglais ou en français selon l'endpoint. Votre intégration doit gérer les deux et afficher un message convivial plutôt que d'exposer les erreurs brutes de l'API.
-</Tip>
-
-## Limitation de débit
-
-Les endpoints Xera sont limités en débit pour protéger la santé de la plateforme et garantir un accès équitable pour tous les builders. Si votre intégration envoie trop de requêtes dans une courte fenêtre, vous pouvez recevoir une réponse `429 Too Many Requests`. Implémentez une stratégie de backoff exponentiel et évitez de poller les endpoints en boucles rapides : utilisez les données retournées par chaque appel pour déclencher les requêtes suivantes uniquement lorsque nécessaire.
-
-## Groupes de endpoints
-
-L'API Xera est organisée en quatre groupes logiques. Chaque groupe couvre un domaine distinct de la fonctionnalité de la plateforme.
+## Endpoints disponibles
 
 <CardGroup cols={2}>
-  <Card title="Interactions" icon="hand-pointer" href="/api/interactions">
-    Suivez les interactions des utilisateurs (vues, likes, partages, commentaires, signets, abonnements) et les impressions du fil. Ces signaux alimentent l'algorithme de classement composite XERA v2.
+  <Card title="Authentification" icon="key" href="/api/authentication">
+    Obtenir et gérer vos tokens API
   </Card>
 
-  <Card title="Fil de découverte" icon="compass" href="/api/feed">
-    Récupérez le fil de découverte classé via l'algorithme composite : 65% de builders vérifiés, 35% de découverte organique, notés selon l'engagement, la qualité créateur, la fraîcheur, la rétention et la viralité.
+  <Card title="Feed" icon="rss" href="/api/feed">
+    Récupérer les Traces du feed de découverte
+  </Card>
+
+  <Card title="Interactions" icon="heart" href="/api/interactions">
+    Lire et écrire des j'aime et commentaires
   </Card>
 
   <Card title="Métriques de contenu" icon="chart-bar" href="/api/content-metrics">
-    Mettez à jour les métriques d'engagement par contenu, y compris le taux de complétion, le temps de visionnage moyen et le score d'engagement calculé. Utilisé pour maintenir les signaux de classement à jour.
-  </Card>
-
-  <Card title="Monétisation" icon="wallet" href="/api/monetization">
-    Accédez aux résumés de gains des créateurs, aux aperçus de portefeuille, aux paramètres de versement et aux demandes de retrait. Initiez les paiements d'abonnement et de soutien via la passerelle KPay.
+    Accéder aux métriques de Trajectory et de constance
   </Card>
 </CardGroup>

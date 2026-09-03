@@ -1,93 +1,73 @@
 ---
-title: "Notifications : suivez les likes, pourboires et streams sur Xera"
+title: "Notifications Xera 1 : gérer vos alertes et préférences"
 sidebarTitle: "Notifications"
-description: "Comprenez ce qui déclenche les notifications Xera, comment y accéder et les gérer, et comment activer les alertes push du navigateur pour des mises à jour en temps réel."
+description: "Gérez les notifications push et in-app sur Xera 1 : nouveaux abonnés, j'aime sur vos Traces, commentaires, alertes de live et messages directs."
 ---
 
-Les notifications Xera vous tiennent informés lorsque des personnes interagissent avec votre travail. Chaque like sur une Trace, nouvel abonné, pourboire entrant ou diffusion en direct d'un builder que vous suivez génère une notification pour que vous puissiez réagir sur le moment, et pas des heures plus tard. Les notifications sont diffusées à la fois dans l'application et, avec votre permission, directement sur votre appareil via push.
+Les notifications de Xera 1 vous informent en temps réel des interactions importantes sur votre compte. Vous pouvez contrôler précisément quels événements déclenchent une alerte depuis les Paramètres de notification.
 
 ## Types de notifications
 
-Xera génère des notifications pour les événements suivants :
+| Événement | Notification push | In-app |
+| --- | --- | --- |
+| Nouveau(velle) abonné(e) | ✓ | ✓ |
+| J'aime sur une Trace | ✓ | ✓ |
+| Commentaire sur une Trace | ✓ | ✓ |
+| Réponse à un commentaire | ✓ | ✓ |
+| Nouveau message direct | ✓ | ✓ |
+| Builder suivi passe en direct | ✓ | ✓ |
+| Jalon complété (votre compte) | ✗ | ✓ |
+| Badge de Trajectory débloqué | ✗ | ✓ |
 
-| Notification | Quand elle se déclenche |
-| --- | --- |
-| **Nouvel abonné** | Quelqu'un commence à suivre votre profil |
-| **Trace aimée** | Un builder aime l'une de vos Traces |
-| **Trace commentée** | Un builder laisse un commentaire sur l'une de vos Traces |
-| **Nouveau supporter (pourboire reçu)** | Un spectateur vous envoie un pourboire pendant une diffusion en direct ou via votre profil |
-| **Nouvelle diffusion en direct** | Un builder que vous suivez démarre une diffusion en direct |
-| **Jalon ARC atteint** | Vous complétez un jalon dans l'un de vos ARC actifs |
-| **Rappel de renouvellement d'abonnement** | Votre plan d'abonnement approche de sa date de renouvellement |
+## Gérer vos préférences de notification
 
-<Info>
-  Les notifications de diffusion en direct sont envoyées uniquement aux abonnés du streamer, et uniquement si le streamer est sur un plan payant actif (Standard, Medium ou Pro).
-</Info>
-
-## Accéder aux notifications
-
-Cliquez sur l'**icône cloche** dans la barre de navigation pour ouvrir le panneau de notifications. La cloche affiche un badge avec votre nombre actuel de non-lus : ce nombre se met à jour en temps réel à mesure que de nouvelles notifications arrivent, pour que vous sachiez toujours quand quelque chose nécessite votre attention.
-
-Le panneau affiche vos 50 notifications les plus récentes, triées de la plus récente à la plus ancienne. Chaque entrée affiche :
-
-- Le type de notification et un court message
-- L'avatar de l'acteur (la personne qui a déclenché la notification)
-- Un horodatage relatif (par exemple, « il y a 5 min », « 2h », « il y a 3 jours »)
-
-Cliquer sur n'importe quelle notification ouvre directement le contenu pertinent : une Trace, un stream, votre tableau de bord ARC ou vos paramètres d'abonnement, et marque la notification comme lue.
-
-## Marquer les notifications comme lues
-
-<Tabs>
-  <Tab title="Marquer individuellement">
-    Cliquez sur n'importe quelle notification dans le panneau. Elle est automatiquement marquée comme lue lorsque vous l'ouvrez, et le compteur de non-lus diminue en conséquence.
-  </Tab>
-  <Tab title="Tout marquer comme lu">
-    Ouvrez le panneau de notifications. Toutes les notifications non lues sont marquées comme lues dès l'ouverture du panneau : vous n'avez pas besoin de cliquer sur chacune individuellement. Le badge s'efface immédiatement.
-  </Tab>
-</Tabs>
-
-## Notifications push
-
-Les notifications push permettent à Xera de vous alerter même lorsque l'onglet du navigateur est fermé ou que l'application est en arrière-plan. Activer les push vous donne des alertes en temps réel pour les nouveaux messages, les diffusions en direct des builders que vous suivez et les pourboires entrants.
-
-### Activer les notifications push
+Allez dans **Paramètres → Notifications** pour activer ou désactiver chaque type de notification indépendamment.
 
 <Steps>
-  <Step title="Répondre à la demande de permission">
-    Lors de votre première connexion, Xera affiche une bannière de permission en haut de l'écran : **"Activer les notifications"**. Cliquez sur **Autoriser** pour accorder la permission push.
+  <Step title="Ouvrir les paramètres">
+    Appuyez sur votre avatar et sélectionnez **Paramètres**.
   </Step>
-  <Step title="Confirmer dans votre navigateur">
-    Votre navigateur affichera sa propre boîte de dialogue de permission native. Cliquez sur **Allow** pour confirmer. Cette étape est unique.
+  <Step title="Sélectionner Notifications">
+    Dans le menu de gauche, appuyez sur **Notifications**.
   </Step>
-  <Step title="Recevoir les alertes push">
-    Une fois accordée, Xera enregistre votre appareil via l'API Web Push. Vous recevrez des notifications même lorsque l'application n'est pas ouverte.
+  <Step title="Activer ou désactiver les types">
+    Utilisez les bascules pour activer ou désactiver chaque catégorie de notification.
+  </Step>
+  <Step title="Enregistrer">
+    Les modifications prennent effet immédiatement.
   </Step>
 </Steps>
 
+## Activer les notifications push du navigateur
+
+Xera 1 est une PWA. Les notifications push fonctionnent directement dans le navigateur sans installation depuis un app store.
+
 <Note>
-  Si vous avez fermé la demande de permission ou sélectionné **"Plus tard"**, Xera ne redemandera pas la permission automatiquement. Pour activer les push manuellement, allez dans les paramètres de site de votre navigateur et accordez la permission de notification pour le domaine Xera, puis rechargez la page.
+  Pour recevoir des notifications push, vous devez autoriser Xera 1 dans les paramètres de notification de votre navigateur. Xera 1 demande cette permission lors de votre première connexion.
 </Note>
 
-<Warning>
-  Si votre navigateur affiche **Denied** pour les notifications, Xera ne peut pas outrepasser ce paramètre. Vous devez supprimer le blocage dans les permissions de site de votre navigateur et recharger la page avant que la demande ne réapparaisse.
-</Warning>
+Si vous avez précédemment refusé les notifications push :
 
-### Comment fonctionne la livraison push
+<Tabs>
+  <Tab title="Chrome / Edge">
+    1. Cliquez sur l'icône de cadenas à gauche de l'URL dans la barre d'adresse.
+    2. Sélectionnez **Paramètres du site**.
+    3. Trouvez **Notifications** et changez la valeur sur **Autoriser**.
+    4. Rechargez la page.
+  </Tab>
+  <Tab title="Firefox">
+    1. Cliquez sur le bouton de permission (icône bouclier ou cadenas) à gauche de l'URL.
+    2. Cliquez sur la flèche **\>** à côté des **Permissions**.
+    3. Trouvez **Recevoir des notifications** et cliquez sur **Autoriser**.
+    4. Rechargez la page.
+  </Tab>
+  <Tab title="Safari">
+    1. Allez dans **Safari → Paramètres → Sites web → Notifications**.
+    2. Trouvez `xera1.xyz` dans la liste.
+    3. Changez la valeur sur **Autoriser**.
+  </Tab>
+</Tabs>
 
-Xera utilise l'**API Web Push** pour envoyer des messages push via le service push intégré de votre navigateur. Lorsqu'un événement éligible se produit : un nouveau message, une diffusion en direct d'un builder que vous suivez ou un pourboire entrant, Xera envoie une notification à tous les appareils enregistrés sur votre compte. Votre navigateur affiche la notification avec un titre, un résumé et une icône, même si l'onglet Xera est fermé.
+## Réinitialiser toutes les préférences
 
-Cliquer sur une notification push ouvre directement Xera sur le contenu pertinent.
-
-## Gérer les préférences de notification
-
-Pour contrôler les types de notifications que vous recevez, naviguez vers **Paramètres du compte → Notifications**. Chaque type de notification peut être activé ou désactivé indépendamment.
-
-| Paramètre | Effet |
-| --- | --- |
-| Basculer **désactivé** | Vous ne recevez plus ce type de notification dans l'application ou via push |
-| Basculer **activé** | Les notifications reprennent immédiatement pour les futurs événements |
-
-<Tip>
-  Si vous trouvez le volume des notifications de chat en direct élevé pendant les streams actifs, Xera supprime automatiquement les notifications de chat en direct pendant que vous visionnez ce stream : vous n'êtes donc pas alerté pour chaque message de chat pendant que vous regardez déjà.
-</Tip>
+Pour revenir aux paramètres de notification par défaut, allez dans **Paramètres → Notifications** et appuyez sur **Réinitialiser par défaut** en bas de page.
